@@ -1,10 +1,27 @@
-Neste desafio, desenvolvemos um Copilot personalizado utilizando o Microsoft Copilot Studio, com foco em criar um fluxo de conversa estruturado e inteligente, capaz de interagir com o usuário de forma dinâmica.
-Durante a prática foi aprendido:
 
-Criar um Copilot do zero, entendendo a lógica por trás da construção de fluxos conversacionais.
-Customizar tópicos, adicionando perguntas, condições, ramificações e respostas baseadas em variáveis.
-Personalizar mensagens de erro para oferecer uma experiência mais clara e orientativa ao usuário.
-Ajustar as respostas com IA generativa, controlando para balancear precisão e naturalidade.
-Testar e validar os fluxos para garantir que as interações sigam o comportamento esperado.
+## Desafio 2 — Implementação prática
 
-Esse processo nos permitiu compreender o potencial do Microsoft Copilot Studio na criação de assistentes conversacionais inteligentes, aplicáveis a cenários possíveis como atendimento ao cliente, suporte interno ou assistentes pessoais.
+No segundo desafio, implementamos um Copilot personalizado no Microsoft Copilot Studio com foco
+em um fluxo de conversa claro e robusto.
+
+Principais aprendizados
+----------------------
+
+- Construção de um copiloto do zero, pensando em tópicos e transições;
+- Estruturação de perguntas condicionais, ramificações e respostas com variáveis;
+- Escrita de mensagens de erro e orientações amigáveis para o usuário;
+- Ajuste de respostas geradas por IA para equilibrar precisão e naturalidade;
+- Testes dos fluxos para assegurar que o comportamento segue os requisitos.
+
+Aplicações práticas
+-------------------
+
+O protótipo demonstra como o Copilot Studio pode ser aplicado em cenários reais,
+por exemplo: atendimento ao cliente automatizado, suporte interno e assistentes pessoais.
+
+Próximos passos
+---------------
+
+- Refinar o conjunto de intenções e entidades com base em interações reais;
+- Medir métricas (taxa de resolução, satisfação do usuário) e iterar nos fluxos;
+- Integrar com canais finais e configurar monitoramento contínuo.

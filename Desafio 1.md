@@ -1,22 +1,35 @@
-# Copilot-Studio
-Desafio Copilot Studio
+## Copilot Studio — Resumo do Desafio
 
-Este documento sumariza os aprendizados e insights obtidos durante a exploração e criação de um copiloto utilizando o Microsoft Copilot Studio, conforme proposto no desafio de capacitação. O objetivo principal foi compreender a funcionalidade da plataforma para o desenvolvimento de assistentes virtuais inteligentes e suas aplicações práticas.
+Documento com os principais aprendizados e resultados obtidos ao explorar o Microsoft Copilot Studio
+no contexto do desafio. O objetivo foi experimentar a criação de um copiloto capaz de entender intenções,
+extrair entidades e responder de forma contextual.
 
-O Microsoft Copilot Studio se destaca como uma ferramenta robusta para a democratização da criação de assistentes virtuais. Sua interface intuitiva, aliada a capacidades de IA e integração profunda com o ecossistema Microsoft, capacita usuários a desenvolver soluções de automação e comunicação inteligentes, otimizando interações e processos de negócios de forma escalável e eficiente.
-É definido utilizando a capacidade de identificar e responder as intenções específicas do usuário sobre um determinado assunto ou tarefa. As entidades são essenciais para o reconhecimento e a extração de informações relevantes das interações do usuário. O Copilot Studio oferece entidades pré-construídas e a capacidade de criar entidades personalizadas para contextos específicos. Após a construção e a fase de testes, o copiloto pode ser publicado e integrado em múltiplos canais, como websites, Microsoft Teams e outras plataformas de comunicação.
+Visão geral
+-----------
 
-Principais Funções e Vantagens da Ferramenta:
+O Microsoft Copilot Studio facilita a criação de assistentes virtuais por meio de:
 
-Automação de Atendimento: Otimiza o suporte ao cliente e a interação com usuários internos, respondendo a consultas frequentes e automatizando tarefas rotineiras.
-Eficiência Operacional: Reduz a necessidade de intervenção humana em processos repetitivos, liberando recursos para atividades de maior valor estratégico.
-Disponibilidade Contínua: Garante atendimento e suporte 24 horas por dia.
-Escalabilidade: Capacidade de gerenciar um grande volume de interações simultaneamente.
-Melhora da Experiência do Usuário: Oferece respostas rápidas e consistentes.
-Análise de Desempenho: Ferramentas de analytics integradas permitem monitorar a performance do copiloto e identificar oportunidades de aprimoramento.
+- templates e fluxos prontos (para começar rápido);
+- edição de tópicos e variáveis para controlar respostas;
+- integração com canais como websites e Microsoft Teams.
 
-No nosso projeto foi trabalhado:
+Vantagens observadas
+---------------------
 
-Baseado em Modelo: Permite iniciar com templates pré-definidos para casos de uso comuns, agilizando o desenvolvimento inicial.
-Baseado em Descrição com IA: Utiliza capacidades de Inteligência Artificial para gerar um rascunho inicial do copiloto a partir de uma descrição em linguagem natural do seu propósito.
-Em Branco: Concede controle total para a construção do copiloto do zero, ideal para necessidades altamente específicas.
+- Automação de atendimento e redução de tarefas repetitivas;
+- Disponibilidade 24/7 e escalabilidade para grandes volumes de interação;
+- Experiência de usuário mais consistente e monitoramento de performance.
+
+O que foi feito no projeto
+-------------------------
+
+- Experimentamos três abordagens: iniciar de um template, gerar um rascunho com IA a partir de
+	uma descrição e construir um copiloto do zero.
+- Testamos fluxos, entidades personalizadas e mensagens de erro para garantir clareza ao usuário.
+
+Próximos passos sugeridos
+------------------------
+
+- Documentar casos de uso e métricas de sucesso do copiloto;
+- Criar testes automatizados para fluxos críticos;
+- Integrar com dados reais (com atenção à privacidade) para melhorar as respostas.

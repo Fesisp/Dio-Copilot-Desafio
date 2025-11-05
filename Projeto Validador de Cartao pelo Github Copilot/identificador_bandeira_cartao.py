@@ -1,74 +1,140 @@
-def identificar_bandeira(numero_cartao: str) -> str:
+"""Identificador de bandeira de cartão de crédito.
+
+Este módulo fornece funções para:
+- limpar um número de cartão
+- verificar o dígito verificador pelo algoritmo de Luhn
+- identificar a bandeira (Visa, MasterCard, American Express, Discover, etc.)
+
+Saída: para cada número informado, mostra a bandeira detectada e se o
+cartão passa na verificação Luhn.
+
+Uso:
+  python identificador_bandeira_cartao.py 4111111111111111 378282246310005
+
+Se executado sem argumentos, entra em modo interativo (prompt).
+"""
+from __future__ import annotations
+
+import argparse
+import re
+from typing import Optional, Tuple
+
+
+def _clean(number: str) -> str:
+    """Remove tudo que não for dígito."""
+    return re.sub(r"\D", "", number or "")
+
+
+def luhn_check(number: str) -> bool:
+    """Retorna True se o número passar no algoritmo de Luhn.
+
+    O número deve ser apenas dígitos.
     """
-    Identifica a bandeira de um cartão de crédito a partir do seu número.
+    n = _clean(number)
+    if not n:
+        return False
+    total = 0
+    reverse_digits = n[::-1]
+    for i, d in enumerate(reverse_digits):
+        digit = int(d)
+        if i % 2 == 1:
+            digit *= 2
+            if digit > 9:
+                digit -= 9
+        total += digit
+    return total % 10 == 0
 
-    A lógica de validação é baseada nos prefixos (BINs) e no comprimento
-    do número do cartão. A função é robusta para limpar caracteres não
-    numéricos e lida com as principais bandeiras do mercado.
 
-    Args:
-        numero_cartao (str): O número do cartão de crédito, que pode
-                             conter espaços ou hífens.
+def detect_brand(number: str) -> Optional[str]:
+    """Detecta a bandeira a partir do número limpo (apenas dígitos).
 
-    Returns:
-        str: O nome da bandeira identificada (ex: "Visa", "MasterCard")
-             ou uma mensagem de erro ("Número inválido") ou de não
-             identificação ("Bandeira não identificada").
+    Retorna o nome da bandeira ou None se não for possível identificar.
     """
-    # 1. Limpa a entrada, removendo todos os caracteres que não são dígitos.
-    numero = ''.join(filter(str.isdigit, numero_cartao))
+    n = _clean(number)
+    ln = len(n)
+    if not n:
+        return None
 
-    # 2. Valida se a entrada contém números após a limpeza.
-    if not numero:
-        return "Número inválido"
+    # Visa
+    if n.startswith("4") and ln in (13, 16, 19):
+        return "Visa"
 
-    # 3. Define as regras de identificação em uma lista de tuplas.
-    #    Cada tupla contém (Nome da Bandeira, Função de Validação).
-    #    A ordem das regras é importante em caso de prefixos sobrepostos.
-    bandeiras = [
-        # Visa: Começa com '4' e tem 13, 16 ou 19 dígitos.
-        ("Visa", lambda n: n.startswith("4") and len(n) in [13, 16, 19]),
-        
-        # MasterCard: Começa com '51' a '55' e tem 16 dígitos.
-        ("MasterCard", lambda n: 51 <= int(n[:2]) <= 55 and len(n) == 16),
-        
-        # American Express: Começa com '34' ou '37' e tem 15 dígitos.
-        ("American Express", lambda n: n.startswith(("34", "37")) and len(n) == 15),
-        
-        # Discover: Vários prefixos e comprimentos.
-        ("Discover", lambda n: n.startswith(("6011", "65")) or (len(n) >= 3 and 644 <= int(n[:3]) <= 649)),
-        
-        # Diners Club: Começa com '36' e tem 14 dígitos.
-        ("Diners Club", lambda n: n.startswith("36") and len(n) == 14),
-        
-        # Hipercard: Começa com '38' e tem 14 dígitos. (Nota: Existem outros prefixos, como '60')
-        ("Hipercard", lambda n: n.startswith("38") and len(n) == 14),
-        
-        # Elo: Múltiplos prefixos, um dos mais complexos.
-        ("Elo", lambda n: any(n.startswith(p) for p in ["636368", "438935", "504175", "451416", "636297", "5067", "4576", "4011"])),
-    ]
-
-    # 4. Itera sobre as regras para encontrar uma correspondência.
-    for nome, condicao in bandeiras:
+    # MasterCard (51-55) e (2221-2720)
+    if ln == 16:
         try:
-            if condicao(numero):
-                return nome
+            first2 = int(n[:2])
+            first4 = int(n[:4])
         except ValueError:
-            # Captura erros de conversão (ex: int(n[:2])) para entradas curtas.
-            continue
-    
-    # 5. Se nenhuma regra corresponder, a bandeira não foi identificada.
-    return "Bandeira não identificada"
+            first2 = first4 = -1
+        if 51 <= first2 <= 55 or 2221 <= first4 <= 2720:
+            return "MasterCard"
 
-# Bloco de execução principal para testar a função.
+    # American Express
+    if ln == 15 and n.startswith(("34", "37")):
+        return "American Express"
+
+    # Discover (6011, 622126-622925, 644-649, 65)
+    if ln in (16, 19):
+        if n.startswith("6011") or n.startswith("65") or (len(n) >= 3 and 644 <= int(n[:3]) <= 649):
+            return "Discover"
+        if len(n) >= 6 and 622126 <= int(n[:6]) <= 622925:
+            return "Discover"
+
+    # JCB (3528-3589)
+    if 16 <= ln <= 19 and len(n) >= 4 and 3528 <= int(n[:4]) <= 3589:
+        return "JCB"
+
+    # Diners Club (300-305, 36, 38, 39)
+    if ln == 14 and (n.startswith("36") or (len(n) >= 3 and 300 <= int(n[:3]) <= 305)):
+        return "Diners Club"
+
+    # Elo - usa muitos BINs; aqui verificamos alguns prefixos comuns.
+    elo_prefixes = ("4011", "4312", "4389", "4514", "4576", "5067", "506699", "5090", "6277", "6362", "6363", "5041")
+    if any(n.startswith(p) for p in elo_prefixes):
+        return "Elo"
+
+    # Hipercard (prefixos variados; heurística simples)
+    if ln >= 13 and (n.startswith("38") or n.startswith("60")):
+        return "Hipercard"
+
+    return None
+
+
+def format_result(number: str) -> Tuple[str, str, bool]:
+    """Retorna (clean_number, brand_or_msg, luhn_ok)."""
+    clean = _clean(number)
+    brand = detect_brand(clean) or "Bandeira não identificada"
+    luhn_ok = luhn_check(clean)
+    return clean, brand, luhn_ok
+
+
+def _parse_args() -> argparse.Namespace:
+    p = argparse.ArgumentParser(description="Identificador de bandeira de cartão + verificação Luhn")
+    p.add_argument("numbers", nargs="*", help="Números de cartão a analisar (pode conter espaços ou hífens). Se vazio, entra em modo interativo.")
+    return p.parse_args()
+
+
+def main():
+    args = _parse_args()
+    if not args.numbers:
+        # Modo interativo
+        print("--- Identificador de Bandeira de Cartão de Crédito ---")
+        print("Pressione Enter em vazio para sair.")
+        while True:
+            try:
+                s = input("Número do cartão: ").strip()
+            except (EOFError, KeyboardInterrupt):
+                print()
+                break
+            if not s:
+                break
+            clean, brand, ok = format_result(s)
+            print(f"{clean} -> {brand} | Luhn: {'válido' if ok else 'inválido'}")
+    else:
+        for s in args.numbers:
+            clean, brand, ok = format_result(s)
+            print(f"{clean} -> {brand} | Luhn: {'válido' if ok else 'inválido'}")
+
+
 if __name__ == "__main__":
-    print("--- Identificador de Bandeira de Cartão de Crédito ---")
-    print("Digite o número do cartão (ou pressione Enter para sair).")
-    
-    while True:
-        numero = input("\nNúmero do cartão: ").strip()
-        if not numero:
-            break
-            
-        bandeira = identificar_bandeira(numero)
-        print(f"Bandeira identificada: {bandeira}")
+    main()
